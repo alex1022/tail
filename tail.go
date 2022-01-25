@@ -83,21 +83,21 @@ type Config struct {
 }
 
 
-
+//tail的配置参数结构体
 type Tail struct {
-	Filename string
-	Lines    chan *Line
-	Config
+	Filename string //文件名称
+	Lines    chan *Line //管道
+	Config  //结构体继承
 
-	file   *os.File
-	reader *bufio.Reader
+	file   *os.File //不懂
+	reader *bufio.Reader //不懂
 
-	watcher watch.FileWatcher
-	changes *watch.FileChanges
+	watcher watch.FileWatcher //不懂
+	changes *watch.FileChanges //不懂
 
-	tomb.Tomb // provides: Done, Kill, Dying
+	tomb.Tomb // provides: Done, Kill, Dying 不懂
 
-	lk sync.Mutex
+	lk sync.Mutex //不懂
 }
 
 var (
