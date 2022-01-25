@@ -21,26 +21,34 @@ import (
 	"gopkg.in/tomb.v1"
 )
 
+//自定义报错输出内容，可以使用error 接收
 var (
 	ErrStop = errors.New("tail should now stop")
 )
 
+
+//定义个结构体类型
 type Line struct {
 	Text string
 	Time time.Time
 	Err  error // Error from tail
 }
 
-// NewLine returns a Line with present time.
+// NewLine returns a Line with present time
+//构造函数,一种特殊的方法，主要用来在创建对象时初始化对象，给对象成员变量初始化值
+//text传入 NewLine函数返回的就是一个Line结构体了，直接构造好了
 func NewLine(text string) *Line {
 	return &Line{text, time.Now(), nil}
 }
 
 // SeekInfo represents arguments to `os.Seek`
+//offset代表偏移地址，也就是需要移动的字节数
+//whence 给offset参数一个参考，表示从哪个位置开始偏移，0代表从文件头，1带表从当前位置，2代表从文件末尾算起，默认0
 type SeekInfo struct {
 	Offset int64
 	Whence int // os.SEEK_*
 }
+
 
 type logger interface {
 	Fatal(v ...interface{})
@@ -53,6 +61,7 @@ type logger interface {
 	Printf(format string, v ...interface{})
 	Println(v ...interface{})
 }
+
 
 // Config is used to specify how a file must be tailed.
 type Config struct {
