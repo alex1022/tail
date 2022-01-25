@@ -49,7 +49,7 @@ type SeekInfo struct {
 	Whence int // os.SEEK_*
 }
 
-
+//不懂这里的用法，大概知道是个自定义的日志接口
 type logger interface {
 	Fatal(v ...interface{})
 	Fatalf(format string, v ...interface{})
@@ -62,25 +62,27 @@ type logger interface {
 	Println(v ...interface{})
 }
 
-
 // Config is used to specify how a file must be tailed.
+//配置文件结构体
 type Config struct {
 	// File-specifc
-	Location    *SeekInfo // Seek to this location before tailing
-	ReOpen      bool      // Reopen recreated files (tail -F)
-	MustExist   bool      // Fail early if the file does not exist
+	Location    *SeekInfo // 从哪个位置开始读取(2个参数控制)
+	ReOpen      bool      // 文件被移除或被打包，需要重新打开，基础库会检测，如果文件有改变，则会重新打开 (tail -F)
+	MustExist   bool      // 如果文件不存在，则提前
 	Poll        bool      // Poll for file changes instead of using inotify
 	Pipe        bool      // Is a named pipe (mkfifo)
-	RateLimiter *ratelimiter.LeakyBucket
+	RateLimiter *ratelimiter.LeakyBucket  //限速控制
 
 	// Generic IO
-	Follow      bool // Continue looking for new lines (tail -f)
-	MaxLineSize int  // If non-zero, split longer lines into multiple lines
+	Follow      bool //  持续读取 (tail -f)
+	MaxLineSize int  // 最大行限制，如果超出了就拆分成多行
 
 	// Logger, when nil, is set to tail.DefaultLogger
 	// To disable logging: set field to tail.DiscardingLogger
-	Logger logger
+	Logger logger  //用到了上面的自定义的logger接口
 }
+
+
 
 type Tail struct {
 	Filename string
